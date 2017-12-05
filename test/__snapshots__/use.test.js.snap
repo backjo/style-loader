@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader Use 1`] = `
+"import css from \\"!!../../node_modules/css-loader/index.js??ref--0-1!./fixture.css\\"
+import runtime from \\"!../../src/lib/index.js\\"
+
+let refs = 0;
+let dispose;
+
+let content = css
+
+if (typeof content === \\"string\\") content = [[module.id, content, \\"\\"]];
+// TODO update for css-loader v1.0.0
+export const locals = content.locals ? content.locals : null
+
+export function use () {
+  if(!(refs++)) {
+    dispose = runtime(content, {\\"hmr\\":true});
+  }
+// return exports;
+  return dispose;
+};
+
+export function unuse () {
+  if(refs > 0 && !(--refs)) {
+    dispose();
+
+    dispose = null;
+  }
+};
+
+// Hot Module Replacement
+if (module.hot) {
+  let lastRefs = module.hot.data && module.hot.data.refs || 0;
+
+  if (lastRefs) {
+    // exports.ref();
+    use();
+
+    if (!content.locals) {
+      refs = lastRefs;
+    }
+  }
+
+  if (!content.locals) {
+    module.hot.accept();
+  }
+
+  module.hot.dispose(function(data) {
+    data.refs = content.locals ? 0 : refs;
+
+    if (dispose) {
+      dispose();
+    }
+  });
+}"
+`;
